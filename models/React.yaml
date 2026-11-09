@@ -1,0 +1,74 @@
+name: React
+instanceOf: Core:Model
+elements:
+  - name: Frontend
+    instanceOf: Core:Class
+    icon: thesvg:react
+    color: '#61dafb'
+    extends:
+      - Application:spa.Frontend
+    validations:
+      - name: reactServices
+        instanceOf: Core:Validation
+        execute: |
+          export default function(element: any) {
+            const service = element._workspace && element._workspace._get('React:ApiClient')
+            const services = element.services || []
+            if (!service || services.every((s: any) => s.instanceOf._inherits(service))) return []
+            return [{ element, message: 'reactServicesOnly', propertyName: 'services' }]
+          }
+  - name: ApiClient
+    instanceOf: Core:Class
+    icon: mui:CloudSync
+    extends:
+      - Application:spa.ApiService
+  - name: ReactClassDiagram
+    instanceOf: Diagram:core.Diagram
+    type: Uml:ClassDiagram
+    subject: React
+    nodes:
+      - name: SpaFrontend
+        instanceOf: Diagram:core.Node
+        element: Application:spa.Frontend
+        x: -390
+        'y': 40
+        width: 200
+        height: 88
+      - name: SpaApiService
+        instanceOf: Diagram:core.Node
+        element: Application:spa.ApiService
+        x: 190
+        'y': 40
+        width: 200
+        height: 88
+      - name: ReactFrontend
+        instanceOf: Diagram:core.Node
+        element: React:Frontend
+        x: -390
+        'y': 300
+        width: 200
+        height: 60
+      - name: ReactApiClient
+        instanceOf: Diagram:core.Node
+        element: React:ApiClient
+        x: 190
+        'y': 300
+        width: 200
+        height: 60
+    links:
+      - name: SpaFrontendServicesLink
+        instanceOf: Diagram:core.Link
+        mapping: Uml:ClassDiagram.relation
+        element: Application:spa.Frontend.services
+        labelX: 0.7
+        labelY: -10
+      - name: frontendLink
+        instanceOf: Diagram:core.Link
+        mapping: Uml:ClassDiagram.relation
+        element: Application:spa.ApiService.frontend
+        hidden: true
+version: latest
+depends:
+  - Diagram
+  - Uml
+  - metaltura/application/Application@v1.0.0
